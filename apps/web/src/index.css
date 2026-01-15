@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+@tailwindcss base;
+@tailwindcss components;
+@tailwindcss utilities;
+
+:root {
+  --font-mono: "Ubuntu Mono";
+
+  --bg-clear: 255 255 255;
+  --bg: 224 231 255;
+  --bg-muted: 224 231 255;
+  --fg: 30 27 75;
+  --fg-muted: 113, 113, 122;
+  --card: 255 255 255;
+  --card-muted: 238 242 255;
+
+  --accent: 99, 102, 241;
+  --accent-hover: 67 56 202;
+  --accent-active: 79 70 229;
+  --accent-muted: 129, 140, 248;
+
+  --success-bg: 209 250 229;
+  --success-accent: 16 185 129;
+  --success-fg: 2 44 34;
+
+  --destructive-bg: 254 226 226;
+  --destructive-fg: 69 10 10;
+  --destructive-accent: 248 113 113;
+
+  --warning-bg: 254 215 170;
+  --warning-fg: 67 20 7;
+  --warning-accent: 249 115 22;
+
+  --info-bg: 255 255 255;
+  --info-fg: 23 37 84;
+  --info-accent: 96 165 250;
+}
+
+[data-theme="dark"] {
+  --bg-clear: 23 23 23;
+  --bg: 10 10 10; /* neutral-950 */
+  --bg-muted: 23 23 23; /* neutral-900 */
+  --fg: 245 245 245; /* neutral-50 */
+  --fg-muted: 245 245 245; /* neutral-100 */
+  --card: 38 38 38; /* neutral-800 */
+  --card-muted: 23 23 23; /* neutral-900 */
+  --accent: 96 165 250; /* blue-400 */
+  --accent-hover: 147 197 253; /* blue-300 */
+  --accent-active: 59 130 246; /* blue-500 */
+  --accent-muted: 29 78 216; /* blue-700 */
+
+  --success-bg: 2 44 34;
+  --success-fg: 209 250 229;
+  --success-accent: 5 150 105;
+
+  --destructive-bg: 248, 113, 113;
+  --destructive-fg: 69, 10, 10;
+  --destructive-accent: 252, 165, 165;
+
+  --warning-bg: 124 45 18;
+  --warning-fg: 254 215 170;
+  --warning-accent: 249 115 22;
+
+  --info-bg: 23 37 84;
+  --info-fg: 191 219 254;
+  --info-accent: 96 165 250;
+}
+
+@theme {
+  --font-mono: var(--font-mono);
+
+  --color-ring: var(--ring);
+  --color-bg-clear: rgb(var(--bg-clear));
+  --color-bg: rgb(var(--bg));
+  --color-bg-muted: rgb(var(--bg-muted));
+  --color-fg: rgb(var(--fg));
+  --color-fg-muted: rgb(var(--fg-muted));
+  --color-card: rgb(var(--card));
+  --color-card-muted: rgb(var(--card-muted));
+  --color-accent: rgb(var(--accent));
+  --color-accent-hover: rgb(var(--accent-hover));
+  --color-accent-active: rgb(var(--accent-active));
+  --color-accent-muted: rgb(var(--accent-muted));
+
+  --color-success-bg: rgb(var(--success-bg));
+  --color-success-fg: rgb(var(--success-fg));
+  --color-success-accent: rgb(var(--success-accent));
+  --color-success-accent-hover: rgb(var(--success-accent-hover));
+  --color-success-accent-active: rgb(var(--success-accent-active));
+  --color-success-muted: rgb(var(--success-muted));
+
+  --color-destructive-bg: rgb(var(--destructive-bg));
+  --color-destructive-fg: rgb(var(--destructive-fg));
+  --color-destructive-accent: rgb(var(--destructive-accent));
+
+  --color-warning-bg: rgb(var(--warning-bg));
+  --color-warning-fg: rgb(var(--warning-fg));
+  --color-warning-accent: rgb(var(--warning-accent));
+
+  --color-info-bg: rgb(var(--info-bg));
+  --color-info-fg: rgb(var(--info-fg));
+  --color-info-accent: rgb(var(--info-accent));
+}
+
+@layer base {
+  h1 {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-mono);
+    letter-spacing: -0.5px;
+  }
+
+  h2 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  h3 {
+    font-size: var(--text-xl);
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+
+    color: var(--color-fg);
+    background-color: var(--color-bg);
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
