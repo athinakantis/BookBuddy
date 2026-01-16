@@ -1,14 +1,31 @@
+import { BookOpen, ChevronLeft, ChevronRight, Minimize, Minus, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Button from "./custom/Button";
-import { BookOpen, ChevronLeft, ChevronRight } from "lucide-react";
-import ThemeSwitcher from "./ThemeSwitcher";
+
+declare global {
+  interface Window {
+    electron: {
+      ipcRenderer: {
+        send: (channel: string, ...args: any[]) => void;
+      };
+    };
+  }
+}
+
 
 export default function Header() {
   const navigate = useNavigate();
 
+  const handleMinimize = () => {
+    window.electron.ipcRenderer.send("minimizeApp");
+  };
+  const handleClose = () => {
+    window.electron.ipcRenderer.send("closeApp");
+  };
+
   return (
-    <header className="flex justify-center bg-bg-clear shadow-sm mb-4 ">
-      <div className="flex text-accent-hover justify-between p-2 items-center max-w-none lg:max-w-300 w-full">
+    <header className="w-full bg-bg-clear text-fg flex items-center mb-4">
+      <div className="flex text-accent-hover justify-between *:py-3 items-center max-w-none lg:max-w-300 w-full *:first:pl-3 *:last:pr-3">
         <div className="flex gap-1">
           <Button
             onClick={() => navigate(-1)}
@@ -24,19 +41,39 @@ export default function Header() {
           </Button>
         </div>
 
-        <button
-          onClick={() => navigate("/")}
-          className="flex gap-3 items-center hover:cursor-pointer"
+        {/* Draggable area */}
+        <div
+          className="bg-bg-clear w-full h-8 flex-center"
+          style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
         >
-          <BookOpen />
+          <button
+            onClick={() => navigate("/")}
+            className="flex gap-3 items-center hover:cursor-pointer"
+          >
+            <BookOpen />
 
-          <h1 className="text-2xl">Athinas Library</h1>
-        </button>
+            <h1 className="text-2xl">Athinas Library</h1>
+          </button>
+        </div>
 
-        <div>
-          <ThemeSwitcher />
+        <div className="flex gap-1 *:p-1 *:flex-center">
+          <Button
+            className="relative w-6"
+            id="minimize-btn "
+            onClick={handleMinimize}
+          >
+            <Minus className="absolute -bottom-px left-1.25" size={15} />
+          </Button>
+          <Button
+            id="close-btn"
+            onClick={handleClose}
+            aria-label="Exit program"
+          >
+            <X size={15} />
+          </Button>
         </div>
       </div>
+
     </header>
   );
 }

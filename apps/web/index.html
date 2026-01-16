@@ -1,34 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Book Tracker</title>
 
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-    />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-      rel="stylesheet"
-    />
-    <script>
-      if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        document.documentElement.dataset.theme = "dark";
-      }
-    </script>
-    <script type="module" crossorigin src="./src/main.tsx"></script>
-  </head>
-  <body className="bg-bg">
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <title>Book Tracker</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet" />
+  <script>
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.documentElement.dataset.theme = "dark";
+    }
+  </script>
+  <script type="module" crossorigin src="./src/main.tsx"></script>
+  <script>
+    document.querySelector("#close-btn")?.addEventListener("click", () => window.api.close())
+    document.querySelector("#minimize-btn")?.addEventListener("click", () => window.api.minimize())
+  </script>
+
+</head>
+
+<body className="bg-bg">
+  <div class="no-drag" id="root"></div>
+</body>
+
 </html>

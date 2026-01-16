@@ -5,10 +5,11 @@
   "description": "Track your books easily with BookBuddy! Rate and review your read books and keep track of your unread books.",
   "main": "main.js",
   "scripts": {
-    "dev:backend": "electron-forge start --app-path apps/electron",
     "start": "electron-forge electron",
     "make": "electron-forge make",
-    "main": "apps/electron/main.js"
+    "main": "apps/electron/main.js",
+    "frontend": "npm --prefix apps/web run dev",
+    "backend": "npm --prefix apps/electron run dev"
   },
   "keywords": [],
   "author": "",
