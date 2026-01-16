@@ -1,4 +1,4 @@
-import { createBrowserRouter, createHashRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 
 import Root from "../layout/Root";
 import BookForm from "@/components/BookForm";
@@ -8,7 +8,7 @@ import Book from "@/pages/Book";
 import EditBook from "@/pages/EditBook";
 
 // TODO: define routes
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: "/",
     element: <Root />,

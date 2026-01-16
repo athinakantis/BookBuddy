@@ -132,3 +132,11 @@
     min-height: 100vh;
   }
 }
+
+@layer components {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+}
+
+

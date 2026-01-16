@@ -1,15 +1,15 @@
 import ReactDOM from "react-dom/client";
 
-import { ApolloClient, InMemoryCache, HttpLink, from } from "@apollo/client";
-import { removeTypenameFromVariables } from "@apollo/client/link/remove-typename";
+import { ApolloClient, HttpLink, InMemoryCache, from } from "@apollo/client";
+import { RemoveTypenameFromVariablesLink } from "@apollo/client/link/remove-typename";
 
-import { ApolloProvider } from "@apollo/client/react";
-import "./index.css"; // <-- Tailwind
-import { UIProvider } from "./context/UIProvider.tsx";
 import { RouterProvider } from "react-router-dom";
+import { UIProvider } from "./context/UIProvider.tsx";
+import "./index.css";
 import { router } from "./router/router.tsx";
+import { ApolloProvider } from "@apollo/client/react";
 
-const removeTypenameLink = removeTypenameFromVariables();
+const removeTypenameLink = new RemoveTypenameFromVariablesLink();
 const link = from([
   removeTypenameLink,
   new HttpLink({ uri: "http://localhost:4000" }),

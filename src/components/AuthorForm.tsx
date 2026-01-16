@@ -9,7 +9,6 @@ export default function AuthorForm() {
       <Search className="mt-2" />
 
       <p>Most popular authors</p>
-      
     </Card>
   );
 }

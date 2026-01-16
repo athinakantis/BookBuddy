@@ -52,7 +52,7 @@ export default function Header() {
           >
             <BookOpen />
 
-            <h1 className="text-2xl">Athinas Library</h1>
+            <h1 className="text-2xl">BookBuddy</h1>
           </button>
         </div>
 

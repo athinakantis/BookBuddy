@@ -12,11 +12,10 @@ app.whenReady().then(async () => {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 800,
-    backgroundColor: "oklch(21% 0.034 264.665)",
     autoHideMenuBar: true,
     frame: false,
     webPreferences: {
-      preload: path.join(app.getAppPath(), "preload.js"),
+      preload: path.join(app.getAppPath(), "electron", "preload.js"),
       sandbox: false,
       contextIsolation: true,
     },
@@ -41,13 +40,11 @@ app.whenReady().then(async () => {
     await mainWindow.loadURL("http://localhost:5173");
   } else {
     const indexHtml = path.join(
-      app.getAppPath(),
-      "../../../../",
+      process.resourcesPath,
+      "app.asar",
       "dist",
-      "index.html"
+      "index.html",
     );
-
-    console.log("Loading frontend from:", indexHtml);
 
     await mainWindow.loadFile(indexHtml);
   }

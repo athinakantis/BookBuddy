@@ -68,13 +68,13 @@ export default function Toast(props: ToastProps) {
     <div
       className={cn(
         "toast",
-        "absolute top-5 right-5 border rounded-md p-4 pr-8 flex gap-4 shadow-md min-w-60 z-100",
+        "absolute top-5 right-5 border rounded-md p-4 flex gap-4 shadow-md min-w-60 z-100 max-w-80",
         variants[type || "info"],
         className
       )}
       {...rest}
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col space-y-2">
         <div className="flex flex-col gap-2">
           <p className="font-semibold">{content.title}</p>
           <p>{content.message}</p>

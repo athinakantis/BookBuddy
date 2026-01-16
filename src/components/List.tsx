@@ -80,11 +80,11 @@ export default function List(props: ListProps) {
 
   const books = (data as any)?.books.books as Book[];
   const totalBooks = (data as any)?.books.total;
-  if (!books) return <>no books</>;
+  if (loading) return <Spinner />
 
   return (
     <section
-      className="bg-card-muted p-4 rounded-lg relative flex flex-col hover:pointer h-fit min-w-80"
+      className="bg-card-muted p-4 rounded-lg relative flex flex-col hover:pointer h-fit min-w-80 "
       data-set-status={listName}
       onDrop={handleDrop}
       onDragEnter={handleDragEnter}
@@ -125,7 +125,7 @@ export default function List(props: ListProps) {
               );
             })
           ) : (
-            <div className="w-60 p-4 rounded-md border-accent-muted relative transition-all hover:cursor-pointer text-center justify-center items-center space-y-4 flex h-full">
+            <div className="w-full p-4 rounded-md border-accent-muted relative transition-all hover:cursor-default text-center justify-center items-center space-y-4 flex h-full">
               <p>List empty</p>
             </div>
           )}

@@ -129,8 +129,7 @@ export default function BookForm() {
       className={cn(
         "bg-card p-4 shadow-lg rounded-md max-w-150 grow",
         "[&>div:has(>input,>.select):not(.actions)]:mb-2",
-        "[&_label]:block",
-        !isEdit && "mx-auto"
+        "[&_label]:block"
       )}
     >
       <h2 className="mb-4">{isEdit ? "Update" : "Add"} Book</h2>
