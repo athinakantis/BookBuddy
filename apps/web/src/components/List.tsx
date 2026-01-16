@@ -14,13 +14,14 @@ import { useState } from "react";
 import Button from "./custom/Button";
 import { Plus } from "lucide-react";
 import Spinner from "./Spinner";
+import { toCapitalized } from "@/lib/utils";
 
 type ListProps = {
   listName: string;
   filter: BookFilterInput;
   orderDirection?: OrderDirection;
   orderBy?: BookOrderBy;
-  limit?: number
+  limit?: number;
 };
 
 export default function List(props: ListProps) {
@@ -64,10 +65,17 @@ export default function List(props: ListProps) {
     if (!bookId) return;
     updateStatus({ variables: { status, bookId } });
     refetch();
+    setActive(false);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    setActive(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setActive(false);
   };
 
   const books = (data as any)?.books.books as Book[];
@@ -76,11 +84,12 @@ export default function List(props: ListProps) {
 
   return (
     <section
-      className="bg-card-muted p-4 rounded-lg relative flex flex-col hover:pointer h-fit"
+      className="bg-card-muted p-4 rounded-lg relative flex flex-col hover:pointer h-fit min-w-80"
       data-set-status={listName}
       onDrop={handleDrop}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
     >
       <div className="mb-4 flex justify-between">
         <h2>{`${listName} (${totalBooks})`}</h2>
@@ -89,38 +98,51 @@ export default function List(props: ListProps) {
           variant="primary"
           onClick={(e) => {
             e.stopPropagation();
-            navigate("/books/new", filter.status ? { state: filter.status } : {});
+            navigate(
+              "/books/new",
+              filter.status ? { state: filter.status } : {}
+            );
           }}
         >
           <Plus size={20} />
         </Button>
       </div>
-      {loading ? (
-        <Spinner className="my-10" />
-      ) : (
+      {!loading && (
         <ul className="flex gap-2 flex-col grow">
           {totalBooks >= 1 ? (
-            books.map((book) => (
-              <li key={book.id}>
-                <BookCard book={book} />
-              </li>
-            ))
+            books.map((book) => {
+              if (active)
+                return (
+                  <div className="w-full rounded-md border-2 border-accent border-dashed h-30 text-accent flex items-center justify-center font-semibold">{`Drop into ${toCapitalized(
+                    filter.status ?? ""
+                  )}`}</div>
+                );
+
+              return (
+                <li key={book.id}>
+                  <BookCard book={book} />
+                </li>
+              );
+            })
           ) : (
             <div className="w-60 p-4 rounded-md border-accent-muted relative transition-all hover:cursor-pointer text-center justify-center items-center space-y-4 flex h-full">
               <p>List empty</p>
             </div>
           )}
+
+          {/* SEE ALL */}
           {totalBooks > 1 && (
             <Button
               onClick={() => navigate(`/lists/${filter.status}`)}
               variant="secondary"
-              className="justify-center"
+              className="justify-center hover:text-bg"
             >
               See all
             </Button>
           )}
         </ul>
       )}
+      {loading && <Spinner />}
     </section>
   );
 }
