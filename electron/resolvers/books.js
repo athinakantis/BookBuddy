@@ -1,6 +1,6 @@
 import db from "../db.js";
 
-const addBook = (_, { input: { title, authorId, status, rating } }) => {
+const addBook = (_, { input: { title, authorId, status, rating, review } }) => {
   const result = db
     .prepare(
       "INSERT INTO books (title, status, author_id, rating) VALUES (?, ?, ?, ?)"
@@ -63,16 +63,6 @@ const updateBook = (_, { input: { id, title, authorId, status, rating, review } 
 const removeBook = (_, { bookId }) => {
   db.prepare("DELETE FROM books WHERE id = ?").run(bookId);
   return true;
-};
-
-const rateBook = (_, { rating, bookId }) => {
-  if (rating < 1 || rating > 5) {
-    throw new Error("Rating must be between 1 and 5");
-  }
-
-  db.prepare("UPDATE books SET rating = ? WHERE id = ?").run(rating, bookId);
-
-  return db.prepare("SELECT * FROM books WHERE id = ?").get(bookId);
 };
 
 const updateBookStatus = (_, { status, bookId }) => {

@@ -35,14 +35,14 @@ export default function List(props: ListProps) {
     },
   });
   const navigate = useNavigate();
-  const [active, setActive] = useState(false);
+  const [canDrop, setCanDrop] = useState(false);
   const [updateStatus] = useMutation(UPDATE_BOOK_STATUS, {
     refetchQueries: [GET_BOOKS],
   });
 
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
-    setActive(true);
+    setCanDrop(true);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -65,22 +65,22 @@ export default function List(props: ListProps) {
     if (!bookId) return;
     updateStatus({ variables: { status, bookId } });
     refetch();
-    setActive(false);
+    setCanDrop(false);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    setActive(true);
+    setCanDrop(true);
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
-    setActive(false);
+    setCanDrop(false);
   };
 
   const books = (data as any)?.books.books as Book[];
   const totalBooks = (data as any)?.books.total;
-  if (loading) return <Spinner />
+  if (loading) return <Spinner />;
 
   return (
     <section
@@ -100,7 +100,7 @@ export default function List(props: ListProps) {
             e.stopPropagation();
             navigate(
               "/books/new",
-              filter.status ? { state: filter.status } : {}
+              filter.status ? { state: filter.status } : {},
             );
           }}
         >
@@ -109,25 +109,27 @@ export default function List(props: ListProps) {
       </div>
       {!loading && (
         <ul className="flex gap-2 flex-col grow">
-          {totalBooks >= 1 ? (
+          {totalBooks >= 1 && (
             books.map((book) => {
-              if (active)
-                return (
-                  <div className="w-full rounded-md border-2 border-accent border-dashed h-30 text-accent flex items-center justify-center font-semibold">{`Drop into ${toCapitalized(
-                    filter.status ?? ""
-                  )}`}</div>
-                );
-
+              if (canDrop) return null
               return (
                 <li key={book.id}>
                   <BookCard book={book} />
                 </li>
               );
             })
-          ) : (
+          )}
+
+          {!canDrop && totalBooks === 0 && (
             <div className="w-full p-4 rounded-md border-accent-muted relative transition-all hover:cursor-default text-center justify-center items-center space-y-4 flex h-full">
               <p>List empty</p>
             </div>
+          )}
+
+          {canDrop && (
+            <div className="w-full rounded-md border-2 border-accent border-dashed h-30 text-accent flex items-center justify-center font-semibold">{`Drop into ${toCapitalized(
+              filter.status ?? "",
+            )}`}</div>
           )}
 
           {/* SEE ALL */}

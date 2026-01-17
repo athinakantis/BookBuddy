@@ -6,6 +6,7 @@
   "description": "Track your books easily with BookBuddy! Rate and review your read books and keep track of your unread books.",
   "scripts": {
     "dev:frontend": "vite",
+    "dev:backend": "npx electron ./electron/main.js",
     "build:frontend": "vite build",
     "build:backend": "npx electron-forge make"
   },

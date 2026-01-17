@@ -23,7 +23,7 @@ export default function List() {
 
       {loading && <Spinner />}
 
-      <div className="flex gap-4 justify-center flex-wrap">
+      <div className="flex gap-4 justify-center flex-wrap" >
         {books?.length > 0 ?
           books.map((book: Book) => (
             <BookCard book={book} key={book.id} />

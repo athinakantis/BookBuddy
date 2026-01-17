@@ -56,6 +56,7 @@ const typeDefs = `#graphql
       authorId: ID!
       status: BookStatus!
       rating: Int
+      review: String
     }
 
     input UpdateBookInput {
