@@ -22,7 +22,7 @@ export default function Rating({
       {Array.from({ length: 5 }).map((_, i) => {
         const filled = hovered // fill if rated or hovered
           ? hovered !== null && i <= hovered
-          : rating && rating >= i;
+          : rating && rating > i;
 
         return (
           <button
