@@ -25,7 +25,7 @@ export default function Header() {
 
   return (
     <header className="w-full bg-bg-clear text-fg flex items-center mb-4">
-      <div className="flex text-accent-hover justify-between *:py-3 items-center max-w-none lg:max-w-300 w-full *:first:pl-3 *:last:pr-3">
+      <div className="flex text-accent-hover justify-between *:py-3 items-center max-w-none lg:max-w-300 w-full *:first:pl-3 *:last:pr-3 mx-auto">
         <div className="flex gap-1">
           <Button
             onClick={() => navigate(-1)}
