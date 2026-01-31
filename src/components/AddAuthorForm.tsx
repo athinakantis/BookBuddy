@@ -1,36 +1,35 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Input from "./custom/Input";
 import Button from "./custom/Button";
-import { Plus } from "lucide-react";
 import { ADD_AUTHOR } from "@/graphql/mutations/authors";
 import { useMutation } from "@apollo/client/react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { authorFormSchema } from "@/domain/authors/authorSchema";
 import { useUI } from "@/context/useUI";
+import { Author } from "@/types/authors";
 
-export default function AddAuthorForm() {
-  const [addAuthor] = useMutation(ADD_AUTHOR);
-  const {openToast} = useUI();
-  const form = useForm({
-    resolver: zodResolver(authorFormSchema),
-    defaultValues: { name: "" },
+type AddAuthorFormProps = Readonly<{
+  onCancel: () => void;
+  onCompleted: (newAuthor: Author) => void;
+}>
+
+export default function AddAuthorForm(props: AddAuthorFormProps) {
+  const { onCancel, onCompleted } = props;
+  const [authorName, setAuthorName] = useState("");
+  const [addAuthor] = useMutation(ADD_AUTHOR, {
+    onCompleted: (result) =>
+      onCompleted((result as any).addAuthor)
   });
-  const [isAdding, setIsAdding] = useState(false);
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = form;
+  const { openToast } = useUI();
 
-  const onSubmit = async (name: { name: string }) => {
+  const onSubmit = async () => {
     try {
-      await addAuthor({ variables: { name } });
+      await addAuthor({ variables: { name: authorName } });
       openToast({
         type: "success",
         content: { title: "Author was added!" },
       });
+      onCancel();
     } catch (error) {
+      console.log(error);
       openToast({
         type: "error",
         content: { title: "Failed to add author" },
@@ -39,20 +38,17 @@ export default function AddAuthorForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <div>
       <label htmlFor="authorName">Name</label>
       <div className="flex gap-2">
-        <Input id="authorName" {...register("name")} error={!!errors.name} errorMessage={errors.name?.message} />
-        {!isAdding && (
-          <Button
-            variant="secondary"
-            className="hover:text-bg"
-            disabled={isAdding}
-          >
-            <Plus />
-          </Button>
-        )}
+        <Input
+          autoFocus
+          id="authorName"
+          onChange={(e) => setAuthorName(e.target.value)}
+        />
+        <Button type="button" onClick={() => onSubmit()}>Add</Button>
+        <Button type="button" onClick={onCancel}>Cancel</Button>
       </div>
-    </form>
+    </div>
   );
 }

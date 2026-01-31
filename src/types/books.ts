@@ -24,10 +24,13 @@ export interface GetBookData {
 
 export interface AddBookInput {
   title: string;
-  authorId: string;
+  author: {
+    name?: string;
+    id: string;
+  }
   status: BookStatus;
-  rating?: number;
-  review?: string;
+  rating?: number | null;
+  review?: string | null;
 }
 
 export interface UpdateBookInput extends AddBookInput {

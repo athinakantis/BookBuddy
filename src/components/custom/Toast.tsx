@@ -37,7 +37,7 @@ export default function Toast(props: ToastProps) {
 
   useEffect(() => {
     if (!content) return;
-    if (content.confirm) return; // don't auto-close confirmation toasts
+    if (onConfirm) return; // don't auto-close confirmation toasts
 
     const ms = typeof timeout === "number" ? timeout : 5000;
 
@@ -80,19 +80,20 @@ export default function Toast(props: ToastProps) {
           <p>{content.message}</p>
         </div>
 
-        {content?.confirm && (
+        {onConfirm && (
           <div className="flex gap-2 self-end">
             <Button onClick={closeToast}>No</Button>
             <Button variant="secondary" onClick={confirm}>Yes</Button>
           </div>
         )}
 
-        {!content?.confirm && <Button
+        {!onConfirm && <Button
           variant="icon"
           onClick={closeToast}
+          aria-label="Close toast"
           className="absolute top-3 right-3 z-100 p-1 hover:cursor rounded-md border-none"
         >
-          <X size={20} />
+          <X size={20} aria-hidden/>
         </Button>}
       </div>
 

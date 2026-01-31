@@ -1,5 +1,5 @@
 import { Check, X } from "lucide-react";
-import { DragEvent } from "react";
+import { DragEvent, HTMLAttributes } from "react";
 import { Book } from "../types/books";
 import Button from "./custom/Button";
 import Rating from "./Rating";
@@ -9,49 +9,31 @@ import { useNavigate } from "react-router-dom";
 import { GET_BOOKS } from "@/graphql/queries/books";
 import Card from "./Card";
 import { useUI } from "@/context/useUI";
+import { cn } from "@/lib/utils";
 
-type BookCardProps = {
+type BookCardProps = Readonly<HTMLAttributes<HTMLDivElement> & {
   book: Book;
-};
+}>;
 
-export default function BookCard({ book }: BookCardProps) {
-  const { title, status, author, rating, id } = book;
+export default function BookCard(props: BookCardProps) {
+  const { title, status, author, rating, id } = props.book;
+  const { className, ...rest } = props;
 
-  const { openToast } = useUI();
-  const [removeBook] = useMutation(REMOVE_BOOK, {
-    refetchQueries: [GET_BOOKS],
-  });
   const [updateStatus] = useMutation(UPDATE_BOOK_STATUS, {
     refetchQueries: [GET_BOOKS],
   });
   const navigate = useNavigate();
 
-  const handleRemove = () => {
-    try {
-      openToast({
-        content: {
-          title: `Are you sure you want to remove ${title}?`,
-          confirm: true,
-        },
-        onConfirm: () => removeBook({ variables: { bookId: id } }),
-      });
-    } catch (error) {
-      openToast({
-        content: { title: "Failed to remove book" },
-        type: "error",
-      });
-    }
-  };
 
   function handleDragStart(e: DragEvent) {
-    console.log(`dragging...`);
     e.stopPropagation();
     try {
       e.dataTransfer.setData(
         "application/json",
-        JSON.stringify({ bookId: id })
+        JSON.stringify({ bookId: id, status })
       );
     } catch (err) {
+      console.log(err)
       e.dataTransfer.setData("text/plain", String(id));
     }
     e.dataTransfer.effectAllowed = "move";
@@ -63,12 +45,14 @@ export default function BookCard({ book }: BookCardProps) {
       onDragStart={handleDragStart}
       onClick={(e) => {
         e.stopPropagation();
-        navigate(`/book/${book.id}`);
+        navigate(`/book/${id}`);
       }}
+      className={cn("max-w-80 hover:cursor-pointer", className)}
+      {...rest}
     >
-      <div className="mb-4">
-        <p className="font-semibold text-lg max-w-[90%]">{title}</p>
-        <p>{author.name}</p>
+      <div className="mb-4 space-y-1">
+        <p className="font-semibold text-xl max-w-[90%] leading-[1.2]">{title}</p>
+        <p className="italic">{author.name}</p>
       </div>
 
 
@@ -109,18 +93,6 @@ export default function BookCard({ book }: BookCardProps) {
           </>
         )}
       </div>
-
-      {/* REMOVE BOOK */}
-      <Button
-        className="top-2 right-2 absolute border-none p-2"
-        variant="icon"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleRemove();
-        }}
-      >
-        <X size={14} />
-      </Button>
     </Card>
   );
 }

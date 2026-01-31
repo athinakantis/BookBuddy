@@ -1,9 +1,19 @@
 import { AddBookInput } from "@/types/books";
 
-export const initialBookValues: AddBookInput = {
+type BookFormInput = Omit<AddBookInput, "authorId"> & {
+  author: {
+    id: string,
+    name: string,
+  }
+}
+
+export const initialBookValues: BookFormInput = {
   title: "",
-  authorId: "",
+  author: {
+    id: "",
+    name: "",
+  },
   status: "UNREAD",
   rating: undefined,
-  review: undefined
+  review: null,
 };

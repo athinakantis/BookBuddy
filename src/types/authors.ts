@@ -4,5 +4,8 @@ export interface Author {
 }
 
 export interface GetAuthorsData {
-  authors: Author[];
+  authors: {
+    items: Author[];
+    totalCount: number;
+  };
 }

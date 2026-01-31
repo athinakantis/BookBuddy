@@ -20,7 +20,7 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
     setToast({
       timeout: 5000,
       open: true,
-      content: { ...content, confirm: !!content?.confirm },
+      content,
       type,
       onConfirm
     });

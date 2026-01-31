@@ -8,3 +8,9 @@ export const ADD_AUTHOR = gql`
     }
   }
 `;
+
+export const REMOVE_AUTHOR = gql`
+  mutation RemoveAuthor($id: ID!) {
+    removeAuthor(authorId: $id)
+  }
+`

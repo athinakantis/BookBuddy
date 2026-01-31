@@ -1,11 +1,8 @@
 @import "tailwindcss";
 
-@tailwindcss base;
-@tailwindcss components;
-@tailwindcss utilities;
-
 :root {
   --font-mono: "Ubuntu Mono";
+  --font-main: "Geist";
 
   --bg-clear: 255 255 255;
   --bg: 224 231 255;
@@ -15,7 +12,7 @@
   --card: 255 255 255;
   --card-muted: 238 242 255;
 
-  --accent: 99, 102, 241;
+  --accent: 79, 70, 229;
   --accent-hover: 67 56 202;
   --accent-active: 79 70 229;
   --accent-muted: 129, 140, 248;
@@ -69,6 +66,7 @@
 
 @theme {
   --font-mono: var(--font-mono);
+  --font-main: var(--font-main);
 
   --color-ring: var(--ring);
   --color-bg-clear: rgb(var(--bg-clear));
@@ -114,10 +112,12 @@
   h2 {
     font-size: var(--text-2xl);
     font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.5px;
   }
 
   h3 {
     font-size: var(--text-xl);
+    letter-spacing: -0.5px;
   }
 
   body {
@@ -126,6 +126,26 @@
 
     color: var(--color-fg);
     background-color: var(--color-bg);
+  }
+
+  label {
+    color: var(--color-fg-muted);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  label,
+  input,
+  data,
+  textarea,
+  select,
+  button {
+    font-family: var(--font-main);
   }
 
   #root {
@@ -138,5 +158,3 @@
     @apply flex items-center justify-center;
   }
 }
-
-

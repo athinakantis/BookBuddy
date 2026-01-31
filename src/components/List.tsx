@@ -1,9 +1,7 @@
 import {
   Book,
   BookFilterInput,
-  BookOrderBy,
-  BookStatus,
-  OrderDirection,
+  BookOrderBy, OrderDirection
 } from "@/types/books";
 import BookCard from "./BookCard";
 import { useNavigate } from "react-router-dom";
@@ -12,27 +10,26 @@ import { UPDATE_BOOK_STATUS } from "@/graphql/mutations/books";
 import { GET_BOOKS } from "@/graphql/queries/books";
 import { useState } from "react";
 import Button from "./custom/Button";
-import { Plus } from "lucide-react";
 import Spinner from "./Spinner";
 import { toCapitalized } from "@/lib/utils";
 
-type ListProps = {
+type ListProps = Readonly<{
   listName: string;
   filter: BookFilterInput;
   orderDirection?: OrderDirection;
   orderBy?: BookOrderBy;
   limit?: number;
-};
+}>;
 
 export default function List(props: ListProps) {
-  const { listName } = props;
-  const { filter, orderBy = "CREATED_AT", orderDirection = "DESC" } = props;
-  const { loading, error, data, refetch } = useQuery(GET_BOOKS, {
+  const { listName, limit, filter, orderBy = "CREATED_AT", orderDirection = "DESC" } = props;
+  const { loading, data, refetch } = useQuery(GET_BOOKS, {
     variables: {
       filter,
       orderBy: { field: orderBy, direction: orderDirection },
-      limit: 1,
+      limit: limit ?? 2,
     },
+
   });
   const navigate = useNavigate();
   const [canDrop, setCanDrop] = useState(false);
@@ -54,18 +51,19 @@ export default function List(props: ListProps) {
 
     if (!raw) return;
 
-    let bookId: string | undefined;
+    let bookId, status: string | undefined;
 
     try {
       bookId = JSON.parse(raw)?.bookId;
+      status = JSON.parse(raw)?.status;
     } catch {
       bookId = raw;
     }
 
-    if (!bookId) return;
-    updateStatus({ variables: { status, bookId } });
-    refetch();
+    if (!bookId || filter.status === status) return setCanDrop(false);
+    updateStatus({ variables: { status: filter.status, bookId } });
     setCanDrop(false);
+    refetch();
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -84,45 +82,30 @@ export default function List(props: ListProps) {
 
   return (
     <section
-      className="bg-card-muted p-4 rounded-lg relative flex flex-col hover:pointer h-fit min-w-80 "
+      className="bg-card-muted rounded-lg relative flex flex-col grow hover:pointer h-full w-full space-y-2"
       data-set-status={listName}
       onDrop={handleDrop}
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
     >
-      <div className="mb-4 flex justify-between">
-        <h2>{`${listName} (${totalBooks})`}</h2>
-        <Button
-          className="bg-bg p-1 h-fit"
-          variant="primary"
-          onClick={(e) => {
-            e.stopPropagation();
-            navigate(
-              "/books/new",
-              filter.status ? { state: filter.status } : {},
-            );
-          }}
-        >
-          <Plus size={20} />
-        </Button>
-      </div>
+      <h2 className="flex">{listName}<span className="text-sm bg-bg-muted px-2 rounded-full  text-accent h-fit ml-1">{totalBooks} </span></h2>
+
       {!loading && (
-        <ul className="flex gap-2 flex-col grow">
-          {totalBooks >= 1 && (
+        <ul className="flex gap-2 grow flex-wrap">
+          {totalBooks >= 1 &&
             books.map((book) => {
-              if (canDrop) return null
+              if (canDrop) return null;
               return (
                 <li key={book.id}>
-                  <BookCard book={book} />
+                  <BookCard book={book} className="w-80 grow" />
                 </li>
               );
-            })
-          )}
+            })}
 
           {!canDrop && totalBooks === 0 && (
-            <div className="w-full p-4 rounded-md border-accent-muted relative transition-all hover:cursor-default text-center justify-center items-center space-y-4 flex h-full">
-              <p>List empty</p>
+            <div className="w-full p-4 rounded-md border-accent-muted relative transition-all hover:cursor-default text-center justify-center items-center space-y-4 flex h-full min-h-20">
+              <p className="italic">List empty</p>
             </div>
           )}
 
@@ -133,11 +116,11 @@ export default function List(props: ListProps) {
           )}
 
           {/* SEE ALL */}
-          {totalBooks > 1 && (
+          {totalBooks > 2 && (
             <Button
               onClick={() => navigate(`/lists/${filter.status}`)}
               variant="secondary"
-              className="justify-center hover:text-bg"
+              className="justify-center hover:text-bg bg-accent-active"
             >
               See all
             </Button>

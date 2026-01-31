@@ -1,6 +1,7 @@
-import { BookOpen, ChevronLeft, ChevronRight, Minimize, Minus, X } from "lucide-react";
+import { BookOpen, ChevronLeft, ChevronRight, Minus, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Button from "./custom/Button";
+import Settings from "./Settings";
 
 declare global {
   interface Window {
@@ -24,7 +25,7 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full bg-bg-clear text-fg flex items-center mb-4">
+    <header className="w-full bg-bg-clear text-fg flex items-center mb-8">
       <div className="flex text-accent-hover justify-between *:py-3 items-center max-w-none lg:max-w-300 w-full *:first:pl-3 *:last:pr-3 mx-auto">
         <div className="flex gap-1">
           <Button
@@ -57,10 +58,12 @@ export default function Header() {
         </div>
 
         <div className="flex gap-1 *:p-1 *:flex-center">
+          <Settings />
           <Button
             className="relative w-6"
-            id="minimize-btn "
+            id="minimize-btn"
             onClick={handleMinimize}
+            aria-label="Minimize window"
           >
             <Minus className="absolute -bottom-px left-1.25" size={15} />
           </Button>
@@ -69,7 +72,7 @@ export default function Header() {
             onClick={handleClose}
             aria-label="Exit program"
           >
-            <X size={15} />
+            <X size={15} aria-hidden />
           </Button>
         </div>
       </div>

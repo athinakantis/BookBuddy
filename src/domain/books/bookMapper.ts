@@ -2,16 +2,19 @@ import { Book, UpdateBookInput } from "@/types/books";
 
 export const mapBookToForm = (book: Book): UpdateBookInput => {
   const {
-    author: { id: authorId },
+    author,
     created_at,
     started_at,
     finished_at,
-    review,
     ...rest
   } = book;
+
+
   return {
-    authorId,
-    review,
+    author: {
+      id: author.id,
+      name: author.name ?? ""
+    },
     ...rest,
   };
 };

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_BOOKS = gql`
-  query GetBooks(
+  query books(
     $filter: BookFilterInput
     $orderBy: BookOrderInput
     $limit: Int

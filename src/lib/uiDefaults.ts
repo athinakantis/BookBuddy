@@ -5,5 +5,5 @@ export const initialToast: Toast = {
   timeout: null,
   content: null,
   type: null,
-  onConfirm: null,
+  onConfirm: undefined,
 };

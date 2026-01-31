@@ -7,18 +7,18 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variants = {
   primary: "border-none text-accent bg-card-muted",
-  icon: "p-1 rounded-md bg-transparent text-fg",
+  icon: "p-1 rounded-md bg-transparent text-fg border-none",
   inline: "bg-transparent font-semibold",
-  secondary: "bg-accent text-bg hover:bg-accent-hover active:bg-accent-active hover:text-fg",
+  secondary: "bg-accent text-bg hover:bg-accent-hover active:bg-accent-active",
   info: "hover:bg-bg-muted",
   warning: "hover:bg-warning-accent bg-warning-bg",
-  error: "hover:bg-destructive-accent bg-destructive-bg text-destructive-fg focus:outline-2 focus:outline-destructive-accent/50 focus:border-destructive-accent",
-  success: "hover:bg-success-accent bg-success-bg",
+  error: "hover:bg-destructive-accent bg-destructive-bg text-destructive-fg focus:outline-2 focus:outline-destructive-accent/50 focus:border-destructive-accent border-0",
+  success: "hover:bg-success-accent/40 bg-success-bg text-success-fg border-0",
 };
 
 
 export default function Button(props: ButtonProps) {
-  const { className, children, variant, type = "button", ...rest } = props;
+  const { className, children, variant, ...rest } = props;
   return (
     <button
       className={cn(

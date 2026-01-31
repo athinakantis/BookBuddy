@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Star } from "lucide-react";
 import { cn } from "../lib/utils";
 
-type RatingProps = {
+type RatingProps = Readonly<{
   rating: number | null;
   setRating?: (number: number) => void;
   readOnly?: boolean;
   className?: string;
-};
+}>
 
 export default function Rating({
   rating,
@@ -27,7 +27,7 @@ export default function Rating({
         return (
           <button
             disabled={readOnly}
-            key={i}
+            key={`rating-${i}`}
             type="button"
             onMouseEnter={() => setHovered(i)}
             onMouseLeave={() => setHovered(null)}
