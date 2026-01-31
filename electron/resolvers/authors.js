@@ -23,8 +23,39 @@ const updateAuthor = (_, { authorId, bookId }) => {
     .run(authorId, bookId);
 };
 
-const authors = () => {
-  return db.prepare("SELECT * FROM authors").all();
+const authors = (_, { search, limit = 10, page = 1 }) => {
+  const safeLimit = Math.min(Math.max(limit, 1), 100);
+  const offset = (page - 1) * safeLimit;
+
+  const totalCount = db.prepare("SELECT COUNT(*) as count FROM authors").get()
+    .count;
+
+  const authorList = search
+    ? db
+        .prepare(
+          `
+        SELECT *
+        FROM authors
+        WHERE name LIKE ?
+        ORDER BY name ASC
+        LIMIT ?
+        OFFSET ?
+        `,
+        )
+        .all(`%${search}%`, safeLimit, offset)
+    : db
+        .prepare(
+          `
+        SELECT *
+        FROM authors
+        ORDER BY name ASC
+        LIMIT ?
+        OFFSET ?
+        `,
+        )
+        .all(safeLimit, offset);
+
+  return { totalCount, items: authorList };
 };
 
 export default {

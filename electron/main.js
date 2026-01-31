@@ -1,10 +1,14 @@
 import { app, BrowserWindow, ipcMain } from "electron";
-import path from "path";
+import path from "node:path";
 import { startGraphQL } from "./index.js";
+const __dirname = import.meta.dirname;
 
 let mainWindow;
 
 const isDev = !app.isPackaged;
+const preloadPath = isDev
+  ? path.join(__dirname, "preload.js")
+  : path.join(__dirname, "..", "electron", "preload.js")
 
 app.whenReady().then(async () => {
   await startGraphQL();
@@ -15,7 +19,7 @@ app.whenReady().then(async () => {
     autoHideMenuBar: true,
     frame: false,
     webPreferences: {
-      preload: path.join(app.getAppPath(), "electron", "preload.js"),
+      preload: preloadPath,
       sandbox: false,
       contextIsolation: true,
     },

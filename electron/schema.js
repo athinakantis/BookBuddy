@@ -16,6 +16,7 @@ const typeDefs = `#graphql
       name: String!
       books: [Book!]!,
       bookCount: Int!
+      totalCount: Int!
     }
 
 
@@ -66,6 +67,9 @@ const typeDefs = `#graphql
       status: BookStatus
       rating: Int
       review: String
+      created_at: String
+      started_at: String
+      finished_at: String
     }
 
     input RateBookInput {
@@ -73,6 +77,10 @@ const typeDefs = `#graphql
       rating: Int!
     }
 
+    type GetAuthorsResponse {
+      totalCount: Int!,
+      items: [Author!]
+    }
 
 
     type Query {
@@ -82,9 +90,12 @@ const typeDefs = `#graphql
         limit: Int
         offset: Int
       ): GetBooksResponse!
-      authors: [Author!]!
+      authors(search: String, limit: Int, page: Int): GetAuthorsResponse!
       book(id: ID!): Book,
       booksByStatus(status: BookStatus!): [Book!]!
+      distinctAuthors: Int
+      readBookCount: Int
+      readBookYearCount: Int
     }
 
     type Mutation {

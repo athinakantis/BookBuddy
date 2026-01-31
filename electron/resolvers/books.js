@@ -3,7 +3,7 @@ import db from "../db.js";
 const addBook = (_, { input: { title, authorId, status, rating, review } }) => {
   const result = db
     .prepare(
-      "INSERT INTO books (title, status, author_id, rating) VALUES (?, ?, ?, ?)"
+      "INSERT INTO books (title, status, author_id, rating) VALUES (?, ?, ?, ?)",
     )
     .run(title, status, authorId, rating);
 
@@ -12,7 +12,22 @@ const addBook = (_, { input: { title, authorId, status, rating, review } }) => {
     .get(result.lastInsertRowid);
 };
 
-const updateBook = (_, { input: { id, title, authorId, status, rating, review } }) => {
+const updateBook = async (
+  _,
+  {
+    input: {
+      id,
+      title,
+      authorId,
+      status,
+      rating,
+      review,
+      started_at,
+      finished_at,
+      created_at,
+    },
+  },
+) => {
   const book = db.prepare("SELECT * FROM books WHERE id = ?").get(id);
 
   if (!book) throw new Error("Book not found");
@@ -38,17 +53,32 @@ const updateBook = (_, { input: { id, title, authorId, status, rating, review } 
     params.push(rating);
   }
 
-  if (review !== undefined) {
+  if (review !== null) {
     if (review.length < 1 || review.length > 500) {
-      throw new Error("Review is too short or too long")
+      throw new Error("Review is too short or too long");
     }
     updates.push("review = ?");
-    params.push(review)
+    params.push(review);
   }
 
   if (authorId !== undefined) {
     updates.push("author_id = ?");
     params.push(authorId);
+  }
+
+  if (started_at !== undefined) {
+    updates.push("started_at = ?");
+    params.push(started_at);
+  }
+  
+  if (created_at !== undefined) {
+    updates.push("created_at = ?");
+    params.push(created_at);
+  }
+
+  if (finished_at !== undefined) {
+    updates.push("finished_at = ?");
+    params.push(finished_at);
   }
 
   if (updates.length === 0) return book;
@@ -190,7 +220,6 @@ export default {
     addBook,
     updateBook,
     removeBook,
-    rateBook,
     updateBookStatus,
   },
   Book: {
