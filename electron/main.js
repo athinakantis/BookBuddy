@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
 import { startGraphQL } from "./index.js";
+import logger from "./logger.js";
 const __dirname = import.meta.dirname;
 
 let mainWindow;
@@ -11,7 +12,9 @@ const preloadPath = isDev
   : path.join(__dirname, "..", "electron", "preload.js")
 
 app.whenReady().then(async () => {
+  logger.info('App is ready - starting backend');
   await startGraphQL();
+  logger.info('GraphQL started');
 
   mainWindow = new BrowserWindow({
     width: 1000,
@@ -41,6 +44,7 @@ app.whenReady().then(async () => {
 
   if (isDev) {
     // Development: use Vite dev server
+    logger.info('Loading dev server at http://localhost:5173');
     await mainWindow.loadURL("http://localhost:5173");
   } else {
     const indexHtml = path.join(
@@ -50,6 +54,7 @@ app.whenReady().then(async () => {
       "index.html",
     );
 
+    logger.info({ path: indexHtml }, 'Loading packaged index.html');
     await mainWindow.loadFile(indexHtml);
   }
 });

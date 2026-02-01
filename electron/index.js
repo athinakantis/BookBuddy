@@ -2,6 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import typeDefs from "./schema.js";
 import resolvers from "./resolvers.js";
+import logger from "./logger.js";
 
 export async function startGraphQL() {
   const server = new ApolloServer({ typeDefs, resolvers });
@@ -10,5 +11,5 @@ export async function startGraphQL() {
     listen: { port: 4000 },
   });
 
-  console.log("GraphQL running at", url);
+  logger.info({ url }, "GraphQL running");
 }
