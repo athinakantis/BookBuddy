@@ -4,24 +4,38 @@ const typeDefs = `#graphql
       title: String!
       status: BookStatus!
       author: Author!
-      rating: Int,
-      review: String,
-      created_at: String!,
-      started_at: String,
+      rating: Int
+      review: String
+      created_at: String!
+      started_at: String
       finished_at: String
     }
 
     type Author {
       id: ID!
       name: String!
-      books: [Book!]!,
-      bookCount: Int!
+      books: [Book!]!
       totalCount: Int!
     }
 
+    type List {
+      id: ID!
+      name: String!
+      description: String
+      created_at: String
+      updated_at: String
+      books: [Book!]!
+    }
+
+    type ListBook {
+      list_id: ID!
+      book_id: ID!
+      position: Int
+      added_at: String
+    }
 
     type GetBooksResponse {
-      total: Int!,
+      total: Int!
       books: [Book!]
     }
     
@@ -73,12 +87,12 @@ const typeDefs = `#graphql
     }
 
     input RateBookInput {
-      bookId: ID!,
+      bookId: ID!
       rating: Int!
     }
 
     type GetAuthorsResponse {
-      totalCount: Int!,
+      totalCount: Int!
       items: [Author!]
     }
 
@@ -90,24 +104,32 @@ const typeDefs = `#graphql
         limit: Int
         offset: Int
       ): GetBooksResponse!
-      authors(search: String, limit: Int, page: Int): GetAuthorsResponse!
-      book(id: ID!): Book,
+      authors(search: String limit: Int page: Int): GetAuthorsResponse!
+      list(id: ID!): List!
+      lists(limit: Int offset: Int): [List]
+      book(id: ID!): Book
       booksByStatus(status: BookStatus!): [Book!]!
       distinctAuthors: Int
       readBookCount: Int
       readBookYearCount: Int
+
     }
 
     type Mutation {
       addBook(input: AddBookInput!): Book!
       updateBook(input: UpdateBookInput!): Book!
-      booksByStatus(status: BookStatus!): [Book!]!,
-      removeBook(bookId: ID!): Boolean,
-      addAuthor(name: String!): Author,
-      rateBook(input: RateBookInput!): Book!,
-      removeAuthor(authorId: ID!): Boolean,
-      updateAuthor(authorId: ID!, bookId: ID!): Book!,
-      updateBookStatus(status: BookStatus!, bookId: ID!): Boolean,
+      booksByStatus(status: BookStatus!): [Book!]!
+      createList(name: String!, description: String): List
+      removeList(id: ID!): Boolean
+      updateList(id: ID! name: String description: String): List
+      removeBook(bookId: ID!): Boolean
+      addAuthor(name: String!): Author
+      rateBook(input: RateBookInput!): Book!
+      removeAuthor(authorId: ID!): Boolean
+      updateAuthor(authorId: ID! bookId: ID!): Book!
+      updateBookStatus(status: BookStatus! bookId: ID!): Boolean
+      addToList(listId: ID!, bookId: ID!): Boolean
+      removeFromList(listId: ID!, bookId: ID!): Boolean
     }
 
   `;
