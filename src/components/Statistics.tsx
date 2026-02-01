@@ -11,9 +11,9 @@ export default function Statistics() {
   if (loading) return <Spinner />
   if (!statistics) return;
   return (
-    <section className="bg-card-muted p-4 rounded-md space-y-2 shadow-sm">
+    <section className="bg-card-muted p-4 rounded-md space-y-2 shadow-sm ">
       <h2>Statistics</h2>
-      <div className="flex gap-4 flex-wrap">
+      <div className="flex gap-4 flex-wrap md:flex-col flex-row">
         <Statistic label={`Books read in ${THIS_YEAR}`} value={statistics.readBookYearCount} />
         <Statistic label="Total books read" value={statistics.readBookCount} />
         <Statistic label={`Unique authors read`} value={statistics.distinctAuthors} />

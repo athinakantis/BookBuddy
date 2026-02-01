@@ -1,6 +1,5 @@
 import Toast from "@/components/custom/Toast";
 import Header from "@/components/Header";
-import SidePanel from "@/components/Sidepanel";
 import { useUI } from "@/context/useUI";
 import { Outlet } from "react-router-dom";
 
@@ -11,7 +10,7 @@ export default function Root() {
     <div className="min-h-screen relative">
       <Header />
 
-      <main className="flex gap-4 justify-center space-y-8 mb-50">
+      <main className="flex gap-4 justify-center space-y-8 mb-50 mx-4 flex-col md:flex-row">
         <Outlet />
       </main>
 
