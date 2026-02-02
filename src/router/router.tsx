@@ -4,7 +4,7 @@ import Root from "../layout/Root";
 import Home from "@/pages/Home";
 import List from "@/pages/List";
 import Book from "@/pages/Book";
-import EditBook from "@/pages/EditBook";
+import BookForm from "@/pages/BookForm";
 
 export const router = createHashRouter([
   {
@@ -14,8 +14,8 @@ export const router = createHashRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/book/:bookId", element: <Book /> },
-      { path: "/book/:bookId/edit", element: <EditBook /> },
-      { path: "/books/new", element: <EditBook /> },
+      { path: "/book/:bookId/edit", element: <BookForm /> },
+      { path: "/books/new", element: <BookForm /> },
       { path: "/lists/:status", element: <List /> },
     ],
   },

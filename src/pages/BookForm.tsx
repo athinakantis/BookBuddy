@@ -4,10 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@apollo/client/react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import Input from "./custom/Input";
-import Select from "./custom/Select";
-import Button from "./custom/Button";
-import Rating from "./Rating";
+import Input from "@/components/custom/Input";
+import Select from "@/components/custom/Select";
+import Button from "@/components/custom/Button";
+import Rating from "@/components/Rating";
 
 import { ADD_BOOK, UPDATE_BOOK } from "@/graphql/mutations/books";
 import { GET_BOOK, GET_BOOKS } from "@/graphql/queries/books";
@@ -22,13 +22,13 @@ import { AddBookInput, GetBookData } from "@/types/books";
 import { Author, GetAuthorsData } from "@/types/authors";
 import { useUI } from "@/context/useUI";
 import { cn, toCapitalized } from "@/lib/utils";
-import Textarea from "./custom/Textarea";
-import Separator from "./custom/Separator";
+import Textarea from "@/components/custom/Textarea";
+import Separator from "@/components/custom/Separator";
 import { useDebounce } from "@/hooks/useDebounce";
-import Results from "./custom/Results";
+import Results from "@/components/custom/Results";
 import { Plus, X } from "lucide-react";
-import Spinner from "./Spinner";
-import AddAuthorForm from "./AddAuthorForm";
+import Spinner from "@/components/Spinner";
+import AddAuthorForm from "@/components/AddAuthorForm";
 
 export default function BookForm() {
   const { bookId } = useParams();
@@ -199,7 +199,7 @@ export default function BookForm() {
       onClick={(e) => e.stopPropagation()}
       onSubmit={handleSubmit(onSubmit)}
       className={cn(
-        "bg-card shadow-sm rounded-md max-w-150 grow",
+        "bg-card shadow-sm rounded-md grow max-w-150 w-full",
         "[&>div:has(>input,>.select):not(.actions)]:mb-2",
         "[&>_div:not(.separator)]:p-6",
         "[&_h2]:mb-4",
