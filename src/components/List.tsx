@@ -22,7 +22,7 @@ type ListProps = Readonly<{
 }>;
 
 export default function List(props: ListProps) {
-  const { listName, limit, filter, orderBy = "CREATED_AT", orderDirection = "DESC" } = props;
+  const { listName, limit = 2, filter, orderBy = "CREATED_AT", orderDirection = "DESC" } = props;
   const { loading, data, refetch } = useQuery(GET_BOOKS, {
     variables: {
       filter,
@@ -82,7 +82,7 @@ export default function List(props: ListProps) {
 
   return (
     <section
-      className="bg-card-muted rounded-lg relative flex flex-col grow hover:pointer h-full w-full space-y-2"
+      className="bg-card-muted relative flex flex-col grow hover:pointer h-fit w-full space-y-2  p-4 rounded-md shadow-sm"
       data-set-status={listName}
       onDrop={handleDrop}
       onDragEnter={handleDragEnter}
@@ -92,7 +92,7 @@ export default function List(props: ListProps) {
       <h2 className="flex">{listName}<span className="text-sm bg-bg-muted px-2 rounded-full  text-accent h-fit ml-1">{totalBooks} </span></h2>
 
       {!loading && (
-        <ul className="flex gap-2 grow flex-wrap">
+        <ul className="flex gap-2 grow lg:flex-wrap flex-col lg:flex-row">
           {totalBooks >= 1 &&
             books.map((book) => {
               if (canDrop) return null;
@@ -116,7 +116,7 @@ export default function List(props: ListProps) {
           )}
 
           {/* SEE ALL */}
-          {totalBooks > 2 && (
+          {totalBooks > limit && (
             <Button
               onClick={() => navigate(`/lists/${filter.status}`)}
               variant="secondary"
