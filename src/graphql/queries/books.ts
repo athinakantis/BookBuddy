@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const GET_BOOKS = gql`
+const GET_BOOKS = gql`
   query books(
     $filter: BookFilterInput
     $orderBy: BookOrderInput
@@ -23,7 +23,7 @@ export const GET_BOOKS = gql`
   }
 `;
 
-export const GET_BOOK = gql`
+const GET_BOOK = gql`
   query ($bookId: ID!) {
     book(id: $bookId) {
       title
@@ -42,7 +42,7 @@ export const GET_BOOK = gql`
   }
 `;
 
-export const GET_BOOKS_BY_STATUS = gql`
+const GET_BOOKS_BY_STATUS = gql`
   query ($status: BookStatus!) {
     booksByStatus(status: $status) {
       id
@@ -59,3 +59,5 @@ export const GET_BOOKS_BY_STATUS = gql`
     }
   }
 `;
+
+export { GET_BOOK, GET_BOOKS, GET_BOOKS_BY_STATUS };

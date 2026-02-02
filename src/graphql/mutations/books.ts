@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const ADD_BOOK = gql`
+const ADD_BOOK = gql`
   mutation AddBook($input: AddBookInput!) {
     addBook(input: $input) {
       id
@@ -13,13 +13,13 @@ export const ADD_BOOK = gql`
   }
 `;
 
-export const REMOVE_BOOK = gql`
+const REMOVE_BOOK = gql`
   mutation RemoveBook($bookId: ID!) {
     removeBook(bookId: $bookId)
   }
 `;
 
-export const UPDATE_BOOK = gql`
+const UPDATE_BOOK = gql`
   mutation UpdateBook($input: UpdateBookInput!) {
     updateBook(input: $input) {
       id
@@ -32,8 +32,10 @@ export const UPDATE_BOOK = gql`
   }
 `;
 
-export const UPDATE_BOOK_STATUS = gql`
+const UPDATE_BOOK_STATUS = gql`
   mutation updateBookStatus($status: BookStatus!, $bookId: ID!) {
     updateBookStatus(status: $status, bookId: $bookId)
   }
 `;
+
+export { ADD_BOOK, REMOVE_BOOK, UPDATE_BOOK, UPDATE_BOOK_STATUS };

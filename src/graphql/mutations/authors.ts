@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const ADD_AUTHOR = gql`
+const ADD_AUTHOR = gql`
   mutation AddAuthor($name: String!) {
     addAuthor(name: $name) {
       id
@@ -9,8 +9,10 @@ export const ADD_AUTHOR = gql`
   }
 `;
 
-export const REMOVE_AUTHOR = gql`
+const REMOVE_AUTHOR = gql`
   mutation RemoveAuthor($id: ID!) {
     removeAuthor(authorId: $id)
   }
-`
+`;
+
+export { REMOVE_AUTHOR, ADD_AUTHOR };
