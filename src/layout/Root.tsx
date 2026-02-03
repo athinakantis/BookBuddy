@@ -1,10 +1,8 @@
-import Toast from "@/components/custom/Toast";
 import Header from "@/components/Header";
-import { useUI } from "@/context/useUI";
 import { Outlet } from "react-router-dom";
+import { Toaster } from "sonner";
 
 export default function Root() {
-  const { toast } = useUI();
 
   return (
     <div className="min-h-screen relative">
@@ -14,7 +12,7 @@ export default function Root() {
         <Outlet />
       </main>
 
-      {toast && <Toast toast={toast} />}
+      <Toaster position="top-right" richColors closeButton/>
     </div>
   );
 }

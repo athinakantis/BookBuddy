@@ -5,12 +5,4 @@ export type ToastContent = {
   message?: string;
 };
 
-export interface Toast {
-  type: ToastStatus | null;
-  content: ToastContent | null;
-  open: boolean;
-  timeout?: number;
-  onConfirm?: () => void;
-}
-
 export type Theme = "light" | "dark";

@@ -20,7 +20,6 @@ import { mapBookToForm } from "@/domain/books/bookMapper";
 
 import { AddBookInput, GetBookData } from "@/types/books";
 import { Author, GetAuthorsData } from "@/types/authors";
-import { useUI } from "@/context/useUI";
 import { cn, toCapitalized } from "@/lib/utils";
 import Textarea from "@/components/custom/Textarea";
 import Separator from "@/components/custom/Separator";
@@ -29,13 +28,14 @@ import Results from "@/components/custom/Results";
 import { Plus, X } from "lucide-react";
 import Spinner from "@/components/Spinner";
 import AddAuthorForm from "@/components/AddAuthorForm";
+import { toast } from "sonner";
+import { toastConfirm } from "@/components/ui/toastConfirm";
 
 export default function BookForm() {
   const { bookId } = useParams();
   const [isAddingAuthor, setIsAddingAuthor] = useState(false);
   const isEdit = Boolean(bookId);
   const navigate = useNavigate();
-  const { openToast } = useUI();
   const [authorSearch, setAuthorSearch] = useState("");
   const { debouncedValue, loading: loadingDebounce } = useDebounce(
     authorSearch,
@@ -129,19 +129,13 @@ export default function BookForm() {
           variables: { input: { id: bookId, authorId: author.id, ...rest } },
         });
       }
-      openToast({
-        type: "success",
-        content: { title: `Book was ${isEdit ? "updated" : "added"}!` },
-      });
+      toast.success(`Book was ${isEdit ? "updated" : "added"}!`);
       reset({
         ...initialBookValues,
         ...(redirectState ?? {}),
       });
     } catch (err) {
-      openToast({
-        type: "error",
-        content: { title: `Failed to ${isEdit ? "update" : "add"} book` },
-      });
+      toast.error(`Failed to ${isEdit ? "update" : "add"} book`);
       console.error(err);
     }
   };
@@ -154,7 +148,7 @@ export default function BookForm() {
       authorsRefetch();
     } catch (err) {
       console.log(err);
-      openToast({ content: { title: "Could not add author" }, type: "error" });
+      toast.error("Could not add author");
     }
   };
   useEffect(() => {
@@ -162,21 +156,11 @@ export default function BookForm() {
   }, [errors]);
   /** Add author inline */
   const handleRemoveAuthor = async (author: Author) => {
-    openToast({
-      content: {
-        title: `Are you sure you want to remove ${author.name}?`,
-      },
+    toastConfirm({
+      title: "Are you sure you want to remove this author?",
       onConfirm: async () => {
-        try {
-          await removeAuthor({ variables: { id: author.id } });
-          void authorsRefetch();
-        } catch (err) {
-          console.log(err);
-          openToast({
-            content: { title: "Could not remove author" },
-            type: "error",
-          });
-        }
+        await removeAuthor({ variables: { id: author.id } });
+        void authorsRefetch();
       },
     });
   };
@@ -302,7 +286,12 @@ export default function BookForm() {
           </div>
         )}
 
-        {isAddingAuthor && <AddAuthorForm onCancel={() => setIsAddingAuthor(false)} onCompleted={(newAuthor: Author) => handleAddAuthor(newAuthor)} />}
+        {isAddingAuthor && (
+          <AddAuthorForm
+            onCancel={() => setIsAddingAuthor(false)}
+            onCompleted={(newAuthor: Author) => handleAddAuthor(newAuthor)}
+          />
+        )}
         {!isAddingAuthor && (
           <div className="flex flex-wrap gap-1 mt-8">
             {authors.length > 0 &&
@@ -314,7 +303,9 @@ export default function BookForm() {
                   <Button
                     type="button"
                     onClick={() => setValue("author", author)}
-                    variant={watch("author.id") === author.id ? "success" : "primary"}
+                    variant={
+                      watch("author.id") === author.id ? "success" : "primary"
+                    }
                     className="rounded-tr-none rounded-br-none transition-colors"
                   >
                     {author.name}

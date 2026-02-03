@@ -3,8 +3,8 @@ import Input from "./custom/Input";
 import Button from "./custom/Button";
 import { ADD_AUTHOR } from "@/graphql/mutations/authors";
 import { useMutation } from "@apollo/client/react";
-import { useUI } from "@/context/useUI";
 import { Author } from "@/types/authors";
+import { toast } from "sonner";
 
 type AddAuthorFormProps = Readonly<{
   onCancel: () => void;
@@ -18,22 +18,15 @@ export default function AddAuthorForm(props: AddAuthorFormProps) {
     onCompleted: (result) =>
       onCompleted((result as any).addAuthor)
   });
-  const { openToast } = useUI();
 
   const onSubmit = async () => {
     try {
       await addAuthor({ variables: { name: authorName } });
-      openToast({
-        type: "success",
-        content: { title: "Author was added!" },
-      });
+      toast.success("Author was added!");
       onCancel();
     } catch (error) {
       console.log(error);
-      openToast({
-        type: "error",
-        content: { title: "Failed to add author" },
-      });
+      toast.error("Failed to add author")
     }
   };
 

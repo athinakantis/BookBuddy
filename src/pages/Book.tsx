@@ -6,18 +6,21 @@ import { cn } from "@/lib/utils";
 import { Book as BookType } from "@/types/books";
 import { useMutation, useQuery } from "@apollo/client/react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useUI } from "@/context/useUI";
 import { REMOVE_BOOK } from "@/graphql/mutations/books";
 import { EllipsisVertical, Pen, XCircle } from "lucide-react";
 import {
   DropdownMenu,
-  DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ListModal from "@/components/ListModal";
+import { toast } from "sonner";
+import { toastConfirm } from "@/components/ui/toastConfirm";
 
 export default function Book() {
   const { bookId } = useParams();
   const navigate = useNavigate();
-  const { openToast } = useUI();
   const { loading, error, data } = useQuery(GET_BOOK, {
     variables: { bookId },
   });
@@ -25,29 +28,14 @@ export default function Book() {
   const [removeBook] = useMutation(REMOVE_BOOK);
 
   const handleRemove = () => {
-    try {
-      openToast({
-        content: {
-          title: `Are you sure you want to remove ${title}?`,
-        },
-        onConfirm: async () => {
-          await removeBook({ variables: { bookId } });
-          openToast({
-            content: {
-              title: "Book was removed!",
-            },
-            type: "success",
-          });
-          navigate(-1);
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      openToast({
-        content: { title: "Failed to remove book" },
-        type: "error",
-      });
-    }
+    toastConfirm({
+      title: `Are you sure you want to remove ${title}?`,
+      onConfirm: async () => {
+        await removeBook({ variables: { bookId } });
+        toast.success("Book was removed!");
+        navigate(-1);
+      },
+    });
   };
 
   if (loading) return <Spinner />;
@@ -63,7 +51,6 @@ export default function Book() {
         "mx-auto w-100",
       )}
     >
-
       {/* Book Title */}
       <div className="mb-4">
         <h2 className="max-w-[90%]">{title}</h2>
@@ -116,7 +103,14 @@ export default function Book() {
         )}
       </div>
 
-      {status === "UNREAD" && <Button variant="success" className="justify-self-end">Start Reading</Button>}
+      {status === "UNREAD" && (
+        <Button
+          variant="success"
+          className="justify-self-end"
+        >
+          Start Reading
+        </Button>
+      )}
 
       {/* Options Menu */}
       <DropdownMenu>
@@ -137,10 +131,16 @@ export default function Book() {
           className="bg-bg-clear border-accent-muted/40 outline-2 outline-accent-muted/40 **:[[role='menuitem']]:focus:bg-accent-muted/20 **:[[role='menuitem']]:hover:cursor-pointer"
         >
           <DropdownMenuItem onSelect={() => navigate(`/book/${bookId}/edit`)}>
-            <Pen />
-            Edit</DropdownMenuItem>
+            <Pen aria-hidden />
+            Edit
+          </DropdownMenuItem>
           <DropdownMenuItem onSelect={handleRemove}>
-            <XCircle />Remove</DropdownMenuItem>
+            <XCircle aria-hidden />
+            Remove
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+            <ListModal bookId={book.id} />
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
