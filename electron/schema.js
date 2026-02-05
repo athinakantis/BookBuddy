@@ -25,6 +25,8 @@ const typeDefs = `#graphql
       created_at: String
       updated_at: String
       books: [Book!]!
+      hasBook(bookId: ID): Boolean!
+      is_favorite: Boolean!
     }
 
     type ListBook {
@@ -32,6 +34,10 @@ const typeDefs = `#graphql
       book_id: ID!
       position: Int
       added_at: String
+    }
+
+    input ListFilter {
+      isFavorite: Boolean
     }
 
     type GetBooksResponse {
@@ -105,8 +111,8 @@ const typeDefs = `#graphql
         offset: Int
       ): GetBooksResponse!
       authors(search: String limit: Int page: Int): GetAuthorsResponse!
-      list(id: ID!): List!
-      lists(limit: Int offset: Int): [List]
+      list(id: ID!, bookId: ID): List!
+      lists(limit: Int offset: Int, bookId: ID, filter: ListFilter): [List]
       book(id: ID!): Book
       booksByStatus(status: BookStatus!): [Book!]!
       distinctAuthors: Int
@@ -131,7 +137,6 @@ const typeDefs = `#graphql
       addToList(listId: ID!, bookId: ID!): Boolean
       removeFromList(listId: ID!, bookId: ID!): Boolean
     }
-
   `;
 
 export default typeDefs;

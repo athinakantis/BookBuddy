@@ -15,11 +15,28 @@ const removeList = (_, { id }) => {
   return true;
 };
 
-const updateList = (_, { id, name, description }) => {
+const updateList = (_, { id, name, description, isFavorite }) => {
   if (!name && !description) throw new Error("Missing updated details");
-  db.prepare(
-    "UPDATE lists SET name = ?, description = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-  ).run(name, description, id);
+  const updates = [];
+  const params = [];
+
+  if (name !== undefined) {
+    updates.push("name = ?");
+    params.push(name);
+  }
+  if (description !== undefined) {
+    updates.push("description = ?");
+    params.push(description);
+  }
+
+  if (isFavorite !== undefined) {
+    updates.push("is_favorite = ?");
+    params.push(isFavorite === true ? 1 : 0);
+  }
+
+  params.push(id);
+  const sql = `UPDATE lists SET ${updates.join(", ")} WHERE id = ?`;
+  db.prepare(sql).run(...params);
 
   return db.prepare("SELECT * FROM lists WHERE id = ?").get(id);
 };
@@ -28,14 +45,41 @@ const list = (_, { id }) => {
   return db.prepare("SELECT * FROM lists WHERE id = ?").get(id);
 };
 
-const lists = (_, { limit = 10, offset = 0 }) => {
-  return db.prepare("SELECT * FROM lists LIMIT ? OFFSET ?").all(limit, offset);
+const lists = (_, { limit = 10, offset = 0, bookId, filter }) => {
+  let whereSql = "";
+  const whereParams = [];
+
+  if (filter) {
+    const conditions = [];
+    if (filter.isFavorite) {
+      conditions.push("is_favorite = ?");
+      whereParams.push(filter.isFavorite === true ? 1 : 0);
+    }
+
+    if (conditions.length) {
+      whereSql = "WHERE " + conditions.join(" AND ");
+    }
+  }
+
+  // DATA QUERY
+  let dataSql = `SELECT * FROM lists ${whereSql} LIMIT ? OFFSET ?`;
+  const dataParams = [...whereParams, limit, offset];
+
+  const rows = db.prepare(dataSql).all(...dataParams);
+
+  // Attach bookId to each list
+  return rows.map((list) => ({
+    ...list,
+    _bookId: bookId ?? null,
+  }));
 };
 
 const addToList = (_, { listId, bookId }) => {
-  return db
+  const result = db
     .prepare("INSERT INTO list_books (list_id, book_id) VALUES (?,?)")
     .run(listId, bookId);
+
+  return result.changes > 0;
 };
 
 const removeFromList = (_, { listId, bookId }) => {
@@ -60,17 +104,28 @@ export default {
   },
   List: {
     books: (list) => {
-      const listBooksResult = db
-        .prepare("SELECT * FROM list_books WHERE list_id = ?")
+      return db
+        .prepare(
+          `
+        SELECT b.*
+        FROM books b
+        JOIN list_books lb ON lb.book_id = b.id
+        WHERE lb.list_id = ?
+      `,
+        )
         .all(list.id);
-      const bookIds = listBooksResult.map((row) => row.book_id);
-      const placeholders = bookIds.map(() => "?").join(",");
+    },
 
-      const books = db
-        .prepare(`SELECT * FROM books WHERE id IN (${placeholders})`)
-        .all(...bookIds);
+    hasBook: (list) => {
+      if (!list._bookId) return false;
 
-      return books;
+      const row = db
+        .prepare(
+          "SELECT 1 FROM list_books WHERE list_id = ? AND book_id = ? LIMIT 1",
+        )
+        .get(list.id, list._bookId);
+
+      return !!row;
     },
   },
 };

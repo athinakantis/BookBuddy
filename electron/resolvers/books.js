@@ -1,11 +1,23 @@
 import db from "../db.js";
 
 const addBook = (_, { input: { title, authorId, status, rating, review } }) => {
+  const inserts = ["title", "status", "author_id"];
+  const params = [title, status, authorId];
+
+  if (review) {
+    inserts.push("review");
+    params.push(review);
+  }
+
+  if (rating) {
+    inserts.push("rating");
+  }
+
   const result = db
     .prepare(
-      "INSERT INTO books (title, status, author_id, rating) VALUES (?, ?, ?, ?)",
+      `INSERT INTO books (${inserts.join(", ")}) VALUES (${new Array(params.length).fill("?").join(", ")})})`,
     )
-    .run(title, status, authorId, rating);
+    .run(...params);
 
   return db
     .prepare("SELECT * FROM books WHERE id = ?")
@@ -70,7 +82,7 @@ const updateBook = async (
     updates.push("started_at = ?");
     params.push(started_at);
   }
-  
+
   if (created_at !== undefined) {
     updates.push("created_at = ?");
     params.push(created_at);
