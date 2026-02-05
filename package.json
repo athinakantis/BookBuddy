@@ -8,7 +8,8 @@
     "dev:frontend": "vite",
     "dev:backend": "npx electron ./electron/main.js",
     "build:frontend": "vite build",
-    "build:backend": "npx electron-forge make"
+    "build:backend": "npx electron-forge make",
+    "rebuild": "electron-rebuild -f -w electron"
   },
   "keywords": [],
   "author": "",

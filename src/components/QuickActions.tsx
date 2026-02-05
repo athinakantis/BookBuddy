@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import Card from "./Card";
+import Card from "@/components/ui/Card";
 import Button from "./custom/Button";
 
 export default function QuickActions() {

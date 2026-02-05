@@ -7,7 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Input from "@/components/custom/Input";
 import Select from "@/components/custom/Select";
 import Button from "@/components/custom/Button";
-import Rating from "@/components/Rating";
+import Rating from "@/components/ui/Rating";
 
 import { ADD_BOOK, UPDATE_BOOK } from "@/graphql/mutations/books";
 import { GET_BOOK, GET_BOOKS } from "@/graphql/queries/books";
@@ -26,8 +26,8 @@ import Separator from "@/components/custom/Separator";
 import { useDebounce } from "@/hooks/useDebounce";
 import Results from "@/components/custom/Results";
 import { Plus, X } from "lucide-react";
-import Spinner from "@/components/Spinner";
-import AddAuthorForm from "@/components/AddAuthorForm";
+import Spinner from "@/components/ui/Spinner";
+import AddAuthorForm from "@/components/authors/AddAuthorForm";
 import { toast } from "sonner";
 import { toastConfirm } from "@/components/ui/toastConfirm";
 
@@ -165,9 +165,9 @@ export default function BookForm() {
     });
   };
 
-  useEffect(() => {
-    console.log("errors:", errors);
-  }, [errors]);
+  // useEffect(() => {
+  //   console.log('errors:', errors);
+  // }, [errors]);
 
   // Refetch authors when search has been updated and debounced
   useEffect(() => {
@@ -217,13 +217,13 @@ export default function BookForm() {
               id="status"
               error={!!errors.status}
               errorMessage={errors.status?.message?.toString()}
-              onSelect={(value) => form.setValue("status", value)}
+              onSelect={(statusObject) => form.setValue("status", statusObject.value)}
               options={["READ", "READING", "UNREAD"].map((o) => ({
                 value: o,
                 label: toCapitalized(o),
               }))}
             >
-              <p>{toCapitalized(watch("status"))}</p>
+              <p>{toCapitalized(watch("status") ?? "")}</p>
             </Select>
           </div>
         </div>

@@ -7,5 +7,6 @@ out
 dist
 
 todo.md
-
 books.db
+settings.json
+electron/command.js

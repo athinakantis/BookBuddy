@@ -1,4 +1,4 @@
-import Card from "./Card";
+import Card from "@/components/ui/Card";
 
 type StatisticProps = Readonly<{
   value: number;

@@ -1,14 +1,13 @@
-import { Check, X } from "lucide-react";
+import { Check } from "lucide-react";
 import { DragEvent, HTMLAttributes } from "react";
-import { Book } from "../types/books";
-import Button from "./custom/Button";
-import Rating from "./Rating";
+import { Book } from "@/types/books";
+import Button from "@/components/custom/Button";
+import Rating from "@/components/ui/Rating";
 import { useMutation } from "@apollo/client/react";
-import { REMOVE_BOOK, UPDATE_BOOK_STATUS } from "@/graphql/mutations/books";
+import { UPDATE_BOOK_STATUS } from "@/graphql/mutations/books";
 import { useNavigate } from "react-router-dom";
 import { GET_BOOKS } from "@/graphql/queries/books";
-import Card from "./Card";
-import { useUI } from "@/context/useUI";
+import Card from "@/components/ui/Card";
 import { cn } from "@/lib/utils";
 
 type BookCardProps = Readonly<HTMLAttributes<HTMLDivElement> & {

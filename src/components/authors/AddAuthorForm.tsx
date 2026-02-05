@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Input from "./custom/Input";
-import Button from "./custom/Button";
+import Input from "../custom/Input";
+import Button from "../custom/Button";
 import { ADD_AUTHOR } from "@/graphql/mutations/authors";
 import { useMutation } from "@apollo/client/react";
 import { Author } from "@/types/authors";

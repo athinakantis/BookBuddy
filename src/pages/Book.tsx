@@ -1,6 +1,6 @@
 import Button from "@/components/custom/Button";
-import Rating from "@/components/Rating";
-import Spinner from "@/components/Spinner";
+import Rating from "@/components/ui/Rating";
+import Spinner from "@/components/ui/Spinner";
 import { GET_BOOK } from "@/graphql/queries/books";
 import { cn } from "@/lib/utils";
 import { Book as BookType } from "@/types/books";
@@ -14,7 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import ListModal from "@/components/ListModal";
+import ListModal from "@/components/lists/ListModal";
 import { toast } from "sonner";
 import { toastConfirm } from "@/components/ui/toastConfirm";
 

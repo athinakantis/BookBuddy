@@ -1,6 +1,6 @@
 import { GET_STATISTICS } from "@/graphql/queries/statistics";
 import { useQuery } from "@apollo/client/react";
-import Spinner from "./Spinner";
+import Spinner from "@/components/ui/Spinner";
 import { StatisticsResponse } from "@/types/statistics";
 import Statistic from "./Statistic";
 

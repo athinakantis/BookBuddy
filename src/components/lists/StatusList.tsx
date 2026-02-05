@@ -3,17 +3,15 @@ import {
   BookFilterInput,
   BookOrderBy, OrderDirection
 } from "@/types/books";
-import BookCard from "./BookCard";
-import { useNavigate } from "react-router-dom";
+import BookCard from "@/components/books/BookCard";
 import { useMutation, useQuery } from "@apollo/client/react";
 import { UPDATE_BOOK_STATUS } from "@/graphql/mutations/books";
 import { GET_BOOKS } from "@/graphql/queries/books";
 import { useState } from "react";
-import Button from "./custom/Button";
-import Spinner from "./Spinner";
+import Spinner from "@/components/ui/Spinner";
 import { toCapitalized } from "@/lib/utils";
 
-type ListProps = Readonly<{
+type StatusListProps = Readonly<{
   listName: string;
   filter: BookFilterInput;
   orderDirection?: OrderDirection;
@@ -21,8 +19,8 @@ type ListProps = Readonly<{
   limit?: number;
 }>;
 
-export default function List(props: ListProps) {
-  const { listName, limit = 2, filter, orderBy = "CREATED_AT", orderDirection = "DESC" } = props;
+export default function StatusList(props: StatusListProps) {
+  const { listName, limit = 1, filter, orderBy = "CREATED_AT", orderDirection = "DESC" } = props;
   const { loading, data, refetch } = useQuery(GET_BOOKS, {
     variables: {
       filter,
@@ -31,11 +29,15 @@ export default function List(props: ListProps) {
     },
 
   });
-  const navigate = useNavigate();
-  const [canDrop, setCanDrop] = useState(false);
   const [updateStatus] = useMutation(UPDATE_BOOK_STATUS, {
     refetchQueries: [GET_BOOKS],
   });
+
+
+  // State, function and event listeners
+  // for drag-and-drop functionality.
+  // When a book is dragged over the list, mark droppable area.
+  const [canDrop, setCanDrop] = useState(false);
 
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
@@ -82,7 +84,7 @@ export default function List(props: ListProps) {
 
   return (
     <section
-      className="bg-card-muted relative flex flex-col grow hover:pointer h-fit w-full space-y-2  p-4 rounded-md shadow-sm"
+      className="bg-card-muted relative flex flex-col hover:pointer h-full space-y-2 p-4 rounded-md shadow-sm"
       data-set-status={listName}
       onDrop={handleDrop}
       onDragEnter={handleDragEnter}
@@ -92,14 +94,12 @@ export default function List(props: ListProps) {
       <h2 className="flex">{listName}<span className="text-sm bg-bg-muted px-2 rounded-full  text-accent h-fit ml-1">{totalBooks} </span></h2>
 
       {!loading && (
-        <ul className="flex gap-2 grow lg:flex-wrap flex-col lg:flex-row">
+        <div className="flex gap-2 grow lg:flex-wrap flex-col lg:flex-row">
           {totalBooks >= 1 &&
             books.map((book) => {
               if (canDrop) return null;
               return (
-                <li key={book.id}>
-                  <BookCard book={book} className="w-80 grow" />
-                </li>
+                <BookCard book={book} className="grow w-full h-fit max-w-none" key={book.id} />
               );
             })}
 
@@ -114,18 +114,7 @@ export default function List(props: ListProps) {
               filter.status ?? "",
             )}`}</div>
           )}
-
-          {/* SEE ALL */}
-          {totalBooks > limit && (
-            <Button
-              onClick={() => navigate(`/lists/${filter.status}`)}
-              variant="secondary"
-              className="justify-center hover:text-bg bg-accent-active"
-            >
-              See all
-            </Button>
-          )}
-        </ul>
+        </div>
       )}
       {loading && <Spinner />}
     </section>
